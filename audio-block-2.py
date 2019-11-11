@@ -56,40 +56,31 @@ audiodata.append((0, metadata[0], metadata[1], metadata[2], [features]))
 
 data = readFileProperties("ad2.wav")
 features = extractFeatures("ad2.wav")
-audiodata.append((1, metadata[0], metadata[1], metadata[2], [features]))
+audiodata.append((1, metadata[0], metadata[1], metadata[2], features))
 
 dataFrame = pd.DataFrame(audiodata, columns=['adBool', 'numChannels', 'sampleRate', 'bitDepth', 'features'])
+print("\nDATAFRAME")
 print(dataFrame)
+print()
 
 
-
-# Convert features and corresponding classification labels into numpy arrays
-
-print("go fuck yourself")
-print(dataFrame.features)
-print(dataFrame.features.shape)
-
+print(type(dataFrame.features))
 x = np.array(dataFrame.features.tolist())
 y = np.array(dataFrame.adBool.tolist())
 
-print("X marks the spot")
-print(x)
-print(x.size)
-
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
-
-
+print(x_train)
+print(x_test)
+print(y_train)
+print(y_test)
 
 num_rows = 40
-num_columns = 2
+num_columns = 40
 num_channels = 1
 
 x_train = x_train.reshape(x_train.shape[0], num_rows, num_columns, num_channels)
 x_test = x_test.reshape(x_test.shape[0], num_rows, num_columns, num_channels)
-
-print("size")
-print(x_train.size)
 
 
 # Construct model 
