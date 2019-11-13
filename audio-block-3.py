@@ -136,7 +136,7 @@ num_batch_size = 256
 
 start = datetime.now()
 
-model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test), verbose=1)
+model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test), verbose=0, use_multiprocessing=True)
 
 duration = datetime.now() - start
 print("Training completed in time: ", duration)
@@ -150,3 +150,8 @@ print("Training Accuracy: ", score[1])
 score = model.evaluate(x_test, y_test, verbose=0)
 print("Testing Accuracy: ", score[1])
 
+# PREDICTION
+print()
+testX = extractFeatures("originals/ad1.wav")
+testX = testX.reshape(1, num_rows, num_columns, num_channels)
+print(model.predict(testX, batch_size=None, verbose=1, steps=None))
