@@ -3,6 +3,7 @@ import os
 import librosa
 import librosa.display
 import struct
+import numpy as np
 
 
 class WavFileHelper():
@@ -28,15 +29,15 @@ class WavFileHelper():
 
 wavfilehelper = WavFileHelper()
 
-audiodata = []
-for index, row in metadata.iterrows():
+# audiodata = []
+# for index, row in metadata.iterrows():
 
-    file_name = os.path.join(os.path.abspath('/UrbanSound8K/audio/'), 'fold' + str(row["fold"]) + '/', str(row["slice_file_name"]))
-    data = wavfilehelper.read_file_properties(file_name)
-    audiodata.append(data)
+#     file_name = os.path.join(os.path.abspath('/UrbanSound8K/audio/'), 'fold' + str(row["fold"]) + '/', str(row["slice_file_name"]))
+#     data = wavfilehelper.read_file_properties(file_name)
+#     audiodata.append(data)
 
-# Convert into a Panda dataframe
-audiodf = pd.DataFrame(audiodata, columns=['num_channels', 'sample_rate', 'bit_depth'])
+# # Convert into a Panda dataframe
+# audiodf = pd.DataFrame(audiodata, columns=['num_channels', 'sample_rate', 'bit_depth'])
 
 
 
@@ -49,9 +50,10 @@ def extract_features(file_name):
         mfccsscaled = np.mean(mfccs.T,axis=0)
         
     except Exception as e:
-        print("Error encountered while parsing file: ", file)
+        print("Error encountered while parsing file: ", file_name)
+        print(e)
         return None 
-     
+    
     return mfccsscaled
     
     
@@ -61,7 +63,7 @@ import os
 import librosa
 
 # Set the path to the full UrbanSound dataset 
-fulldatasetpath = '/Urban Sound/UrbanSound8K/audio/'
+fulldatasetpath = './UrbanSound8K/audio/'
 
 metadata = pd.read_csv(fulldatasetpath + '../metadata/UrbanSound8K.csv')
 
@@ -72,7 +74,7 @@ for index, row in metadata.iterrows():
     
     file_name = os.path.join(os.path.abspath(fulldatasetpath),'fold'+str(row["fold"])+'/',str(row["slice_file_name"]))
     
-    class_label = row["class_name"]
+    class_label = row["class"]
     data = extract_features(file_name)
     
     features.append([data, class_label])
@@ -90,11 +92,15 @@ from keras.utils import to_categorical
 
 # Convert features and corresponding classification labels into numpy arrays
 X = np.array(featuresdf.feature.tolist())
+print("mefirst")
+print(X.shape)
 y = np.array(featuresdf.class_label.tolist())
+print(y.shape)
 
 # Encode the classification labels
 le = LabelEncoder()
-yy = to_categorical(le.fit_transform(y)) 
+yy = to_categorical(le.fit_transform(y))
+print(yy.shape)
 
 # split the dataset 
 from sklearn.model_selection import train_test_split 
@@ -102,7 +108,10 @@ from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(X, yy, test_size=0.2, random_state = 42)
 
 
-
+print(x_train.shape)
+print(y_train.shape)
+print(x_test.shape)
+print(y_test.shape)
 
 import numpy as np
 from keras.models import Sequential
@@ -116,8 +125,8 @@ num_rows = 40
 num_columns = 174
 num_channels = 1
 
-x_train = x_train.reshape(x_train.shape[0], num_rows, num_columns, num_channels)
-x_test = x_test.reshape(x_test.shape[0], num_rows, num_columns, num_channels)
+x_train = x_train.reshape(num_rows, num_columns, num_channels)
+x_test = x_test.reshape(num_rows, num_columns, num_channels)
 
 num_labels = yy.shape[1]
 filter_size = 2
