@@ -124,7 +124,7 @@ print("Pre-training accuracy: %.4f%%" % accuracy)
 
 # Train the model
 start = datetime.now()
-model.fit(xTrain, yTrain, batch_size=256, epochs=72, validation_data=(xTest, yTest), verbose=0, use_multiprocessing=True)
+model.fit(xTrain, yTrain, batch_size=256, epochs=100, validation_data=(xTest, yTest), verbose=0, use_multiprocessing=True)
 duration = datetime.now() - start
 print("Training completed in time: ", duration)
 
