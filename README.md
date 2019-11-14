@@ -15,4 +15,4 @@ Tested working with 95+% accuracy, to run simply
 ![NFL](./mfccs-images/nfl-mfccs.png)
 
 **AD**
-![Ad](./mfccs-images/ad-mfccs.png)
+![Ad](./mfccs-images/ad1-mfccs.png)
